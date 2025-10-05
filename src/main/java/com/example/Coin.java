@@ -6,11 +6,12 @@ import javafx.beans.property.SimpleStringProperty;
 public class Coin {
 
     private final SimpleStringProperty name;
+    private final SimpleStringProperty id;
     private final SimpleDoubleProperty price;
     private final SimpleDoubleProperty holdings;
     private final SimpleDoubleProperty value;
 
-    public Coin(String name, double price, double holdings)
+    public Coin(String id, String name, double price, double holdings)
     {
         this.id = new SimpleStringProperty(id);
         this.name = new SimpleStringProperty(name);

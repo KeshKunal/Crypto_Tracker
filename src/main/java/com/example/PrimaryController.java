@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.application.Platform;
 
 public class PrimaryController {
 
@@ -45,13 +46,13 @@ public class PrimaryController {
         holdingsColumn.setCellValueFactory(new PropertyValueFactory<>("holdings"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-        portfolio.add(new Coin("Bitcoin", 68000.75, 0.5));
-        portfolio.add(new Coin("Ethereum", 3500.21, 10.0));
-        portfolio.add(new Coin("Doge Coin", 150.55, 30.0));
+        portfolio.add(new Coin("bitcoin","Bitcoin", 0.0, 0.5));
+        portfolio.add(new Coin("ethereum","Ethereum", 0.0, 10.0));
+        portfolio.add(new Coin("dogecoin","Doge Coin", 0.0, 30.0));
 
         coinTableView.setItems(portfolio);
 
-        updateTableValue();
+        updateTotalValue();
         refreshPrices();
     }
 
@@ -61,7 +62,7 @@ public class PrimaryController {
        for( Coin coin : portfolio)
        {
         double newPrice = ApiService.getPrice(coin.getId()); 
-        platform.runLater(() -> {
+        Platform.runLater(() -> {
             coin.setPrice(newPrice);
             updateTotalValue();
         });
