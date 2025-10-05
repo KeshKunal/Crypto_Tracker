@@ -27,7 +27,7 @@
          <children>
             <Label fx:id="totalValueLabel" text="Total Value: $0.00" />
             <Button fx:id="addCoinButton" text="Add Coin" onAction="#handleAddCoin"/>
-            <Button fx:id="refreshButton" text="Refresh" onAction = "#refreshPrices" />
+            <Button fx:id="refreshButton" text="Refresh" onAction="#refreshPrices" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

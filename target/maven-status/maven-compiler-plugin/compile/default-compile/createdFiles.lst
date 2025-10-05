@@ -4,4 +4,5 @@ com\example\SecondaryController.class
 module-info.class
 com\example\App.class
 com\example\ApiService.class
+com\example\ApiService$1.class
 com\example\Coin.class
