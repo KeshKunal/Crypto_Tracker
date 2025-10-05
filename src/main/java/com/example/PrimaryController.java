@@ -50,10 +50,33 @@ public class PrimaryController {
         portfolio.add(new Coin("Doge Coin", 150.55, 30.0));
 
         coinTableView.setItems(portfolio);
+
+        updateTableValue();
+        refreshPrices();
     }
 
     @FXML
-    private void switchToSecondary() throws IOException {
-        App.setRoot("secondary");
+    private void refreshPrices() {
+        new Thread(() -> {
+       for( Coin coin : portfolio)
+       {
+        double newPrice = ApiService.getPrice(coin.getId()); 
+        platform.runLater(() -> {
+            coin.setPrice(newPrice);
+            updateTotalValue();
+        });
+       }
+    }).start();
+}
+
+private void updateTotalValue()
+{
+    double total = 0.0;
+    for(Coin coin: portfolio)
+    {
+        total += coin.getValue();
     }
+
+    totalValueLabel.setText(String.format("Total Value: $%.4f", total));
+}
 }

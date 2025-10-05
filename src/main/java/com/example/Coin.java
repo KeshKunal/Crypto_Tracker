@@ -12,6 +12,7 @@ public class Coin {
 
     public Coin(String name, double price, double holdings)
     {
+        this.id = new SimpleStringProperty(id);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleDoubleProperty(price);
         this.holdings = new SimpleDoubleProperty(holdings);
@@ -20,7 +21,15 @@ public class Coin {
     }
     
     // Getters and property method
+    public String getId()
+    {
+        return id.get();
+    }
 
+    public SimpleStringProperty idProperty()
+    {
+        return id;
+    }
     public String getName()
     {
         return name.get();
