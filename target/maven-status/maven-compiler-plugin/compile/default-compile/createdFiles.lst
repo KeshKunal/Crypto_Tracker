@@ -1,8 +1,10 @@
-com\example\AddCoinController.class
 com\example\PrimaryController.class
+com\example\ApiService.class
+com\example\AddCoinController.class
 com\example\SecondaryController.class
+com\example\Portfolio.class
 module-info.class
 com\example\App.class
-com\example\ApiService.class
 com\example\ApiService$1.class
 com\example\Coin.class
+com\example\PrimaryController$1.class

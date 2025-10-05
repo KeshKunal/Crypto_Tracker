@@ -1,9 +1,18 @@
 package com.example;
 
 import java.io.IOException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,6 +55,8 @@ public class PrimaryController {
     private Button refreshButton;
 
     private ObservableList<Coin> portfolio = FXCollections.observableArrayList();
+    // file which stores user data
+    private static final String SAVE_FILE = "portfolio.json";
 
     @FXML
     public void initialize() {
@@ -60,6 +71,7 @@ public class PrimaryController {
 
         coinTableView.setItems(portfolio);
         
+        loadPortfolio();
         refreshPrices();
     }
 
@@ -67,7 +79,7 @@ public class PrimaryController {
     private void handleAddCoin() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(App.class.getResource("add_coin.fxml")); // Changed from add_coin_dialog.fxml
+            loader.setLocation(App.class.getResource("add_coin.fxml"));
             GridPane page = (GridPane) loader.load();
 
             Stage dialogStage = new Stage();
@@ -82,6 +94,7 @@ public class PrimaryController {
 
             if (controller.isOkClicked()) {
                 portfolio.add(controller.getNewCoin());
+                savePortfolio(); //saves everytime
                 refreshPrices();
             }
         } catch (IOException e) {
@@ -118,6 +131,45 @@ public class PrimaryController {
             });
         }).start();
     }
+
+    private void loadPortfolio()
+    {
+        try(Reader reader = new FileReader(SAVE_FILE))
+        {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<Portfolio>>() {}.getType();
+            List<Portfolio> loadedItems = gson.fromJson (reader, listType);
+            if (loadedItems != null) {
+                portfolio.clear();
+                for (Portfolio item : loadedItems) {
+                    portfolio.add(new Coin(item.getId(), "", 0.0, item.getHoldings()));
+                }
+            } 
+        } 
+        catch (IOException e) 
+        {
+            // No save file? First-time user  we load defaults values
+            System.out.println("No save file found. Loading default portfolio.");
+            portfolio.add(new Coin("bitcoin", "Bitcoin", 0.0, 0.5));
+            portfolio.add(new Coin("ethereum", "Ethereum", 0.0, 10.0));
+        }
+    }
+
+    private void savePortfolio() {
+        try (Writer writer = new FileWriter(SAVE_FILE)) 
+        {
+            List<Portfolio> itemsToSave = new ArrayList<>();
+            for (Coin coin : portfolio) {
+                itemsToSave.add(new Portfolio(coin.getId(), coin.getHoldings()));
+            }
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(itemsToSave, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void updateTotalValue() {
         double total = portfolio.stream()
